@@ -1,4 +1,5 @@
-﻿using FileSystem.Http.Requests;
+﻿using FileSystem.Cli.Models;
+using FileSystem.Http.Requests;
 using Isopoh.Cryptography.Argon2;
 using System;
 using System.Collections.Generic;
@@ -34,6 +35,16 @@ namespace FileSystem.Entities
             {
                 Login = request.Login,
                 Password = Argon2.Hash(request.Password)
+            };
+            return credentials;
+        }
+
+        public static Credentials CreateFromCliModel(RegistrateAdministrator model)
+        {
+            Credentials credentials = new Credentials
+            {
+                Login = model.Login,
+                Password = Argon2.Hash(model.Password)
             };
             return credentials;
         }

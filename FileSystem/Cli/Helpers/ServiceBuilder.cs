@@ -7,15 +7,16 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Tests.Helpers
+namespace FileSystem.Cli.Helpers
 {
-    class ServiceBuilder
+    public class ServiceBuilder
     {
         public static IServiceProvider BuildServiceProvider()
         {
             return new ServiceCollection()
                  .AddSingleton<IConfiguration>(Configuration.GetConfiguration())
-                 .AddDbContext<Postgres>()
+                 .AddSingleton<Postgres>()
+                 .AddMemoryCache()
                  .AddTransient<IRepository<User>, UsersRepository>()
                  .AddTransient<IRepository<UserStatus>, UserStatusesRepository>()
                  .AddTransient<IRepository<Credentials>, CredentialsRepository>()

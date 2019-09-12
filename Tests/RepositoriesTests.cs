@@ -1,9 +1,7 @@
 using System;
 using Xunit;
-using FileSystem;
-using FileSystem.Services.Implementations;
 using Microsoft.Extensions.DependencyInjection;
-using Tests.Helpers;
+using FileSystem.Cli.Helpers;
 using FileSystem.Entities;
 using FileSystem.Services.Interfaces;
 

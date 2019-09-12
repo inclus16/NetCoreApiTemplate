@@ -32,7 +32,8 @@ namespace FileSystem.Migrations
                     name = table.Column<string>(type: "VARCHAR(100)"),
                     email = table.Column<string>(type: "VARCHAR(100)"),
                     status_id = table.Column<int>(type: "INT", nullable: false),
-                    created_at = table.Column<DateTime>(type: "TIMESTAMP", nullable: true,defaultValueSql:"NOW()")
+                    created_at = table.Column<DateTime>(type: "TIMESTAMP", nullable: true,defaultValueSql:"NOW()"),
+                    is_admin=table.Column<bool>(type:"BOOLEAN")
                 },
                 constraints: table =>
                 {

@@ -1,13 +1,15 @@
-﻿using FileSystem.ValidatorRules;
+﻿using CommandDotNet;
+using FileSystem.Http.Requests;
+using FileSystem.ValidatorRules;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace FileSystem.Http.Requests
+namespace FileSystem.Cli.Models
 {
-    public class RegistrationRequest
+    public class RegistrateAdministrator : IArgumentModel
     {
         [Required]
         [StringLength(100)]
@@ -16,16 +18,15 @@ namespace FileSystem.Http.Requests
         [Required]
         [EmailAddress]
         [StringLength(100)]
-        [Unique("users","email")]
         public string Email { get; set; }
 
         [Required]
         [StringLength(100)]
-        [Unique("credentials", "login")]
         public string Login { get; set; }
 
         [Required]
-        [StringLength(1000,MinimumLength = 6)]
+        [StringLength(1000, MinimumLength = 6)]
         public string Password { get; set; }
     }
 }
+
