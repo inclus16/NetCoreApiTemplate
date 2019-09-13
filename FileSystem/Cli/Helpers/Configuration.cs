@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace FileSystem.Cli.Helpers
+namespace InclusCommunication.Cli.Helpers
 {
     class Configuration
     {

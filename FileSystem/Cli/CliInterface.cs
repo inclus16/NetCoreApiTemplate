@@ -1,9 +1,9 @@
 ﻿using CommandDotNet;
 using CommandDotNet.Attributes;
-using FileSystem.Cli.Models;
-using FileSystem.Entities;
-using FileSystem.Services.Implementations;
-using FileSystem.Services.Interfaces;
+using InclusCommunication.Cli.Models;
+using InclusCommunication.Entities;
+using InclusCommunication.Services.Implementations;
+using InclusCommunication.Services.Interfaces;
 using Microsoft.EntityFrameworkCore.Storage;
 using System;
 using System.Collections.Generic;
@@ -11,7 +11,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace FileSystem.Cli
+namespace InclusCommunication.Cli
 {
     public class CliInterface
     {
@@ -40,7 +40,7 @@ namespace FileSystem.Cli
             using (IDbContextTransaction transaction = Db.Database.BeginTransaction())
             {
                 Users.Insert(user);
-                FileSystem.Entities.Credentials credentials = FileSystem.Entities.Credentials.CreateFromCliModel(model);
+                InclusCommunication.Entities.Credentials credentials = InclusCommunication.Entities.Credentials.CreateFromCliModel(model);
                 credentials.UserId = user.Id;
                 Credentials.Insert(credentials);
                 transaction.Commit();

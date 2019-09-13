@@ -1,18 +1,19 @@
 using System;
 using Xunit;
 using Microsoft.Extensions.DependencyInjection;
-using FileSystem.Cli.Helpers;
-using FileSystem.Entities;
-using FileSystem.Services.Interfaces;
+using InclusCommunication.Cli.Helpers;
+using InclusCommunication.Entities;
+using InclusCommunication.Services.Interfaces;
 
 namespace Tests
 {
-    public class RepositoriesTests
+    public class RepositoriesTests : DatabaseTesting
     {
         private readonly IServiceProvider Services;
 
         public RepositoriesTests()
         {
+
             Services = ServiceBuilder.BuildServiceProvider();
         }
 
@@ -20,53 +21,49 @@ namespace Tests
         [Fact]
         public void TestUsers()
         {
-            IRepository<User> users = Services.GetService<IRepository<User>>();
-            FileSystem.Http.Requests.RegistrationRequest request = new FileSystem.Http.Requests.RegistrationRequest
+            InclusCommunication.Http.Requests.RegistrationRequest request = new InclusCommunication.Http.Requests.RegistrationRequest
             {
                 Name = "test",
-                Email = "test"
+                Email = TEST_EMAIL
             };
-            RemoveTestUsers(users, request);
+            RemoveTestUsers();
            
             User user = User.CreateFromRequest(request);
-            users.Insert(user);
-            Assert.NotEmpty(users.All());
-            Assert.NotEmpty(users.Find(x => x.Name == request.Name && x.Email == request.Email));
-            Assert.NotNull(users.Find(x => x.Id == user.Id));
-            users.Remove(user);
-            Assert.Null(users.First(x => x.Id == user.Id));
-            Assert.Empty(users.Find(x => x.Name == request.Name && x.Email == request.Email));
-            users.Insert(user);
+            Users.Insert(user);
+            Assert.NotEmpty(Users.All());
+            Assert.NotEmpty(Users.Find(x => x.Name == request.Name && x.Email == request.Email));
+            Assert.NotNull(Users.Find(x => x.Id == user.Id));
+            Users.Remove(user);
+            Assert.Null(Users.First(x => x.Id == user.Id));
+            Assert.Empty(Users.Find(x => x.Name == request.Name && x.Email == request.Email));
+            Users.Insert(user);
             user.Name = "test2";
-            users.Update(user);
-            Assert.NotNull(users.Find(x => x.Name == "test2" && x.Email == request.Email));
-            users.Remove(user);
+            Users.Update(user);
+            Assert.NotNull(Users.Find(x => x.Name == "test2" && x.Email == request.Email));
         }
 
         [Fact]
         public void TestCredentials()
         {
-            IRepository<Credentials> credentials = Services.GetService<IRepository<Credentials>>();
-            IRepository<User> users = Services.GetService<IRepository<User>>();
-            var request = new FileSystem.Http.Requests.RegistrationRequest
+            var request = new InclusCommunication.Http.Requests.RegistrationRequest
             {
                 Name = "test",
-                Email = "test",
-                Login="test",
-                Password ="test"
+                Email = TEST_EMAIL,
+                Login=TEST_LOGIN,
+                Password = TEST_PASSWORD
             };
-            RemoveTestUsers(users, request);
+            RemoveTestUsers();
+            RemoveTestCredentials();
             User user = User.CreateFromRequest(request);
-            users.Insert(user);
-            Credentials credentialsEntity = Credentials.CreateFromRegistration(request);
+            Users.Insert(user);
+            Credentials credentialsEntity = InclusCommunication.Entities.Credentials.CreateFromRegistration(request);
             credentialsEntity.UserId = user.Id;
-            credentials.Insert(credentialsEntity);
-            Assert.NotEmpty(credentials.All());
-            Assert.NotEmpty(credentials.Find(x => x.Id == credentialsEntity.Id));
-            Assert.NotNull(credentials.First(x => x.Login == request.Login));
-            credentials.Remove(credentialsEntity);
-            Assert.Empty(credentials.Find(x => x.Login == request.Login));
-            users.Remove(user);
+            Credentials.Insert(credentialsEntity);
+            Assert.NotEmpty(Credentials.All());
+            Assert.NotEmpty(Credentials.Find(x => x.Id == credentialsEntity.Id));
+            Assert.NotNull(Credentials.First(x => x.Login == request.Login));
+            Credentials.Remove(credentialsEntity);
+            Assert.Empty(Credentials.Find(x => x.Login == request.Login));
         }
 
         [Fact]
@@ -75,17 +72,8 @@ namespace Tests
             IRepository<UserStatus> statuses = Services.GetService<IRepository<UserStatus>>();
             Assert.NotEmpty(statuses.All());
             Assert.NotNull(statuses.Find(x => x.Id == UserStatus.ACTIVE));
-            Assert.NotNull(statuses.Find(x => x.Id == UserStatus.WAIT_FOR_EMAIL));
             Assert.NotNull(statuses.Find(x => x.Id == UserStatus.BLOCKED));
         }
 
-        private void RemoveTestUsers(IRepository<User> users, FileSystem.Http.Requests.RegistrationRequest request)
-        {
-            User[] existingUsers = users.Find(x => x.Name == request.Name && x.Email == request.Email);
-            if (existingUsers.Length > 0)
-            {
-                users.RemoveRange(existingUsers);
-            }
-        }
     }
 }

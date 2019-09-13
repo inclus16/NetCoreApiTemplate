@@ -1,12 +1,12 @@
-﻿using FileSystem.Entities;
-using FileSystem.Services.Interfaces;
+﻿using InclusCommunication.Entities;
+using InclusCommunication.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace FileSystem.Services.Implementations
+namespace InclusCommunication.Services.Implementations
 {
     public class UsersRepository : AbstractRepository, IRepository<User>
     {
@@ -14,17 +14,17 @@ namespace FileSystem.Services.Implementations
         public UsersRepository(Postgres db) : base(db) { }
         public User[] All()
         {
-            return  Db.Users.ToArray();
+            return  Db.Users.Include(x=>x.Role).Include(x=>x.Status).ToArray();
         }
 
         public User[] Find(Func<User, bool> predicate)
         {
-           return Db.Users.Where(predicate).ToArray();
+           return Db.Users.Include(x => x.Role).Include(x => x.Status).Where(predicate).ToArray();
         }
 
         public User First(Func<User, bool> predicate)
         {
-            return Db.Users.FirstOrDefault(predicate);
+            return Db.Users.Include(x => x.Role).Include(x => x.Status).FirstOrDefault(predicate);
         }
 
         public void Insert(User entity)

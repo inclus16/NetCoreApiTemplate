@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace FileSystem.Services.Interfaces
+namespace InclusCommunication.Services.Interfaces
 {
     public interface IRepository<T>
     {

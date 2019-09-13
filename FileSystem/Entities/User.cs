@@ -1,12 +1,12 @@
-﻿using FileSystem.Cli.Models;
-using FileSystem.Http.Requests;
+﻿using InclusCommunication.Cli.Models;
+using InclusCommunication.Http.Requests;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace FileSystem.Entities
+namespace InclusCommunication.Entities
 {
     [Table("users")]
     public class User
@@ -23,8 +23,11 @@ namespace FileSystem.Entities
         [Column("status_id",TypeName = "INT")]
         public int StatusId { get; set; }
 
-        [Column("is_admin",TypeName ="BOOLEAN")]
-        public bool IsAdmin { get; set; }
+        [Column("role_id",TypeName ="INT")]
+        public int RoleId { get; set; }
+
+        [ForeignKey("RoleId")]
+        public UserRole Role { get; set; }
 
         [ForeignKey("StatusId")]
         public UserStatus Status { get; set; }
@@ -40,9 +43,9 @@ namespace FileSystem.Entities
             {
                 Name = request.Name,
                 Email = request.Email,
-                StatusId = UserStatus.WAIT_FOR_EMAIL,
+                StatusId = UserStatus.ACTIVE,
                 CreatedAt = DateTime.Now,
-                IsAdmin = false
+                RoleId=UserRole.USER
             };
             return user;
             
@@ -56,7 +59,7 @@ namespace FileSystem.Entities
                 Email = cliModel.Email,
                 StatusId = UserStatus.ACTIVE,
                 CreatedAt = DateTime.Now,
-                IsAdmin = true
+                RoleId = UserRole.ADMINISTRATOR
             };
             return user;
         }

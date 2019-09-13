@@ -1,4 +1,4 @@
-﻿using FileSystem.Services.Implementations;
+﻿using InclusCommunication.Services.Implementations;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
 using System;
@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace FileSystem.ValidatorRules
+namespace InclusCommunication.ValidatorRules
 {
 
     public class PresentInDatabase : ValidationAttribute

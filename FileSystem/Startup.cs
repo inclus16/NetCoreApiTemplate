@@ -1,13 +1,16 @@
-﻿using FileSystem.Entities;
-using FileSystem.Services.Implementations;
-using FileSystem.Services.Interfaces;
+﻿using InclusCommunication.Entities;
+using InclusCommunication.Services.Implementations;
+using InclusCommunication.Services.Interfaces;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
-namespace FileSystem
+namespace InclusCommunication
 {
     public class Startup
     {
@@ -26,6 +29,24 @@ namespace FileSystem
             services.AddTransient<IRepository<User>,UsersRepository>();
             services.AddTransient<IRepository<UserStatus>,UserStatusesRepository>();
             services.AddTransient<IRepository<Credentials>, CredentialsRepository>();
+            services.AddTransient<IRepository<UserRole>,UserRolesRepository>();
+            services.AddTransient<SecurityProvider>();
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                    .AddJwtBearer(options =>
+                    {
+                        options.RequireHttpsMetadata = false;
+                        options.TokenValidationParameters = new TokenValidationParameters
+                        {
+                            ValidateLifetime = true,
+                            ValidateAudience=false,
+                            ValidateIssuer=true,
+                            ValidIssuer = Configuration.GetValue<string>("JwtIssuer"),
+                            // установка ключа безопасности
+                            IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes("JwtToken")),
+                            // валидация ключа безопасности
+                            ValidateIssuerSigningKey = true
+                        };
+                    });
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
@@ -43,6 +64,7 @@ namespace FileSystem
             }
 
             app.UseHttpsRedirection();
+            app.UseAuthentication();
             app.UseMvc();
         }
     }

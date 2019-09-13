@@ -5,14 +5,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using CommandDotNet;
 using CommandDotNet.IoC.MicrosoftDependencyInjection;
-using FileSystem.Cli;
-using FileSystem.Cli.Helpers;
+using InclusCommunication.Cli;
+using InclusCommunication.Cli.Helpers;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
-namespace FileSystem
+namespace InclusCommunication
 {
     public class Program
     {

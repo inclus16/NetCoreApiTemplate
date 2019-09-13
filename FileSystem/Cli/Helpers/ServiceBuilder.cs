@@ -1,13 +1,13 @@
-﻿using FileSystem.Entities;
-using FileSystem.Services.Implementations;
-using FileSystem.Services.Interfaces;
+﻿using InclusCommunication.Entities;
+using InclusCommunication.Services.Implementations;
+using InclusCommunication.Services.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace FileSystem.Cli.Helpers
+namespace InclusCommunication.Cli.Helpers
 {
     public class ServiceBuilder
     {
@@ -20,6 +20,7 @@ namespace FileSystem.Cli.Helpers
                  .AddTransient<IRepository<User>, UsersRepository>()
                  .AddTransient<IRepository<UserStatus>, UserStatusesRepository>()
                  .AddTransient<IRepository<Credentials>, CredentialsRepository>()
+                 .AddTransient<SecurityProvider>()
                  .BuildServiceProvider();
         }
     }

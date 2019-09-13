@@ -10,8 +10,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace InclusCommunication.Migrations
 {
     [DbContext(typeof(Postgres))]
-    [Migration("20190912162951_credentials")]
-    partial class credentials
+    [Migration("20190913183647_user_roles")]
+    partial class user_roles
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -66,15 +66,37 @@ namespace InclusCommunication.Migrations
                         .HasColumnName("name")
                         .HasColumnType("VARCHAR(100)");
 
+                    b.Property<int>("RoleId")
+                        .HasColumnName("role_id")
+                        .HasColumnType("INT");
+
                     b.Property<int>("StatusId")
                         .HasColumnName("status_id")
                         .HasColumnType("INT");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("RoleId");
+
                     b.HasIndex("StatusId");
 
                     b.ToTable("users");
+                });
+
+            modelBuilder.Entity("InclusCommunication.Entities.UserRole", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("id")
+                        .HasColumnType("SERIAL");
+
+                    b.Property<string>("Name")
+                        .HasColumnName("name")
+                        .HasColumnType("VARCHAR(20)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("user_roles");
                 });
 
             modelBuilder.Entity("InclusCommunication.Entities.UserStatus", b =>
@@ -103,6 +125,11 @@ namespace InclusCommunication.Migrations
 
             modelBuilder.Entity("InclusCommunication.Entities.User", b =>
                 {
+                    b.HasOne("InclusCommunication.Entities.UserRole", "Role")
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
                     b.HasOne("InclusCommunication.Entities.UserStatus", "Status")
                         .WithMany()
                         .HasForeignKey("StatusId")

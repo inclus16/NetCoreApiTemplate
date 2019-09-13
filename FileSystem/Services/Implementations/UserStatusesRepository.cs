@@ -1,16 +1,16 @@
-﻿using FileSystem.Entities;
-using FileSystem.Services.Interfaces;
+﻿using InclusCommunication.Entities;
+using InclusCommunication.Services.Interfaces;
 using Microsoft.Extensions.Caching.Memory;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace FileSystem.Services.Implementations
+namespace InclusCommunication.Services.Implementations
 {
     public class UserStatusesRepository:AbstractRepository,IRepository<UserStatus>
     {
-        private const string CACHE_NAME = "user_statuses";
+        private const string CACHE_NAME = "user_roles";
 
         private readonly IMemoryCache Cache;
         public UserStatusesRepository(Postgres db,IMemoryCache cache) : base(db)

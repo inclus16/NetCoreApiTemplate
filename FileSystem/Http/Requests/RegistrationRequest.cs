@@ -1,11 +1,11 @@
-﻿using FileSystem.ValidatorRules;
+﻿using InclusCommunication.ValidatorRules;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace FileSystem.Http.Requests
+namespace InclusCommunication.Http.Requests
 {
     public class RegistrationRequest
     {

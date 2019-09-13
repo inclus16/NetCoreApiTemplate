@@ -1,5 +1,5 @@
-﻿using FileSystem.Cli.Models;
-using FileSystem.Http.Requests;
+﻿using InclusCommunication.Cli.Models;
+using InclusCommunication.Http.Requests;
 using Isopoh.Cryptography.Argon2;
 using System;
 using System.Collections.Generic;
@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace FileSystem.Entities
+namespace InclusCommunication.Entities
 {
     [Table("credentials")]
     public class Credentials

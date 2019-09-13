@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace FileSystem.Services.Implementations
+namespace InclusCommunication.Services.Implementations
 {
     public abstract class AbstractRepository
     {

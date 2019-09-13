@@ -1,13 +1,13 @@
 ﻿using CommandDotNet;
-using FileSystem.Http.Requests;
-using FileSystem.ValidatorRules;
+using InclusCommunication.Http.Requests;
+using InclusCommunication.ValidatorRules;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace FileSystem.Cli.Models
+namespace InclusCommunication.Cli.Models
 {
     public class RegistrateAdministrator : IArgumentModel
     {

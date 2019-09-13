@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
-namespace FileSystem.Migrations
+namespace InclusCommunication.Migrations
 {
     public partial class users : Migration
     {
@@ -21,7 +21,8 @@ namespace FileSystem.Migrations
                     table.PrimaryKey("PK_user_statuses", x => x.id);
                 });
 
-            migrationBuilder.InsertData("user_statuses", "name", new string[3] { "wait_for_email", "active", "blocked" });
+
+            migrationBuilder.InsertData("user_statuses", "name", new string[2] { "active", "blocked" });
 
             migrationBuilder.CreateTable(
                 name: "users",
@@ -32,8 +33,7 @@ namespace FileSystem.Migrations
                     name = table.Column<string>(type: "VARCHAR(100)"),
                     email = table.Column<string>(type: "VARCHAR(100)"),
                     status_id = table.Column<int>(type: "INT", nullable: false),
-                    created_at = table.Column<DateTime>(type: "TIMESTAMP", nullable: true,defaultValueSql:"NOW()"),
-                    is_admin=table.Column<bool>(type:"BOOLEAN")
+                    created_at = table.Column<DateTime>(type: "TIMESTAMP", nullable: true, defaultValueSql: "NOW()")
                 },
                 constraints: table =>
                 {
@@ -52,6 +52,7 @@ namespace FileSystem.Migrations
                 name: "IX_users_status_id",
                 table: "users",
                 column: "status_id");
+
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

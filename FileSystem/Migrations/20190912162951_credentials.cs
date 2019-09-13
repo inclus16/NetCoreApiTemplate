@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
-namespace FileSystem.Migrations
+namespace InclusCommunication.Migrations
 {
     public partial class credentials : Migration
     {

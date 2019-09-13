@@ -1,11 +1,12 @@
-﻿using FileSystem.Entities;
-using FileSystem.Services.Interfaces;
+﻿using InclusCommunication.Entities;
+using InclusCommunication.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
-namespace FileSystem.Services.Implementations
+namespace InclusCommunication.Services.Implementations
 {
     public class CredentialsRepository : AbstractRepository, IRepository<Credentials>
     {
@@ -13,17 +14,17 @@ namespace FileSystem.Services.Implementations
         public CredentialsRepository(Postgres db) : base(db) { }
         public Credentials[] All()
         {
-            return Db.Credentials.ToArray();
+            return Db.Credentials.Include(x => x.User).Include(x=>x.User.Role).ToArray();
         }
 
         public Credentials[] Find(Func<Credentials, bool> predicate)
         {
-            return Db.Credentials.Where(predicate).ToArray();
+            return Db.Credentials.Include(x=>x.User).Include(x => x.User.Role).Where(predicate).ToArray();
         }
 
         public Credentials First(Func<Credentials, bool> predicate)
         {
-            return Db.Credentials.FirstOrDefault(predicate);
+            return Db.Credentials.Include(x => x.User).Include(x => x.User.Role).FirstOrDefault(predicate);
         }
 
         public void Insert(Credentials entity)
