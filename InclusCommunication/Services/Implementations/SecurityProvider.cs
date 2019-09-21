@@ -17,33 +17,26 @@ namespace InclusCommunication.Services.Implementations
 {
     public class SecurityProvider
     {
-
-        private readonly IRepository<User> Users;
-
         private readonly IRepository<Credentials> Credentials;
 
         private readonly IConfiguration Configuration;
-        public SecurityProvider(IRepository<User> users,
+        public SecurityProvider(
             IRepository<Credentials> credentials
             ,IConfiguration configuration)
         {
-            Users = users;
             Credentials = credentials;
             Configuration = configuration;
         }
 
-        public AbstractResponse GetResponse(LoginRequest  request)
+        public string GetToken(LoginRequest  request)
         {
-            AbstractResponse response= new AbstractResponse();
-            response.Success = false;
             Credentials credentials = Credentials.First(x => x.Login == request.Login);
+            var test = Credentials.All();
             if (credentials == null||!VerifyUser(credentials.Password,request.Password))
             {
-                return response;
+                return null;
             }
-            response.Success = true;
-            response.Data = BuildToken(credentials.User);
-            return response;
+            return BuildToken(credentials.User); ;
         }
 
         private bool VerifyUser(string dbPassword, string providedPassword)
@@ -59,7 +52,7 @@ namespace InclusCommunication.Services.Implementations
                   claims: GetIdentity(user).Claims,
                   issuer: Configuration.GetValue<string>("JwtIssuer"),
                   expires: now.Add(TimeSpan.FromMinutes(Configuration.GetValue<double>("JwtLifetime"))),
-                  signingCredentials: new SigningCredentials(new SymmetricSecurityKey(Encoding.ASCII.GetBytes("JwtToken")), SecurityAlgorithms.HmacSha256));
+                  signingCredentials: new SigningCredentials(new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Configuration.GetValue<string>("JwtToken"))), SecurityAlgorithms.HmacSha256));
             return new JwtSecurityTokenHandler().WriteToken(jwt);
         }
 

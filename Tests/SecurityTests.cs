@@ -1,52 +1,55 @@
-﻿using InclusCommunication.Cli.Helpers;
+﻿using InclusCommunication;
 using InclusCommunication.Entities;
+using InclusCommunication.Http.Requests;
 using InclusCommunication.Http.Responses;
 using InclusCommunication.Services.Implementations;
 using InclusCommunication.Services.Interfaces;
+using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Security;
 using System.Text;
+using System.Threading.Tasks;
+using Tests.Helpers;
 using Xunit;
 
 namespace Tests
 {
-    public class SecurityTests : DatabaseTesting
+    public class SecurityTests : IClassFixture<FakeWebFactory<InclusCommunication.Startup>>
     {
-        private readonly SecurityProvider Security;
 
-        public SecurityTests():base()
+        protected const string TEST_EMAIL = "test@mail.ru";
+
+        protected const string TEST_LOGIN = "testLogin";
+
+        protected const string TEST_PASSWORD = "123456";
+
+
+        private readonly FakeWebFactory<Startup> Factory;
+        public SecurityTests(FakeWebFactory<Startup> factory) 
         {
-            IServiceProvider services= ServiceBuilder.BuildServiceProvider();
-            Security = services.GetRequiredService<SecurityProvider>();
-          
+            Factory = factory;
         }
 
         [Fact]
-        public void TestVerifyUser()
+        public async Task TestVerifyUser()
         {
-            RemoveTestCredentials();
-            RemoveTestUsers();
-            var request = new InclusCommunication.Http.Requests.RegistrationRequest
+            HttpClient client = Factory.CreateClient();
+            
+            HttpContent httpContent = new StringContent(JsonConvert.SerializeObject(new LoginRequest
             {
-                Name = "test",
-                Email = TEST_EMAIL,
-                Login = TEST_LOGIN,
-                Password = TEST_PASSWORD
-            };
-            User user = User.CreateFromRequest(request);
-            Users.Insert(user);
-            Credentials credentialsEntity = InclusCommunication.Entities.Credentials.CreateFromRegistration(request);
-            credentialsEntity.UserId = user.Id;
-            Credentials.Insert(credentialsEntity);
-            AbstractResponse response = Security.GetResponse(new InclusCommunication.Http.Requests.LoginRequest
-            {
-                Login = TEST_LOGIN,
-                Password = TEST_PASSWORD
-            });
-            Assert.True(response.Success);
-            Assert.NotNull(response.Data);
+                Login = FakeWebFactory<Startup>.TEST_LOGIN,
+                Password = FakeWebFactory<Startup>.TEST_PASSWORD
+            }));
+            httpContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
+            HttpResponseMessage response = await client.PostAsync("/api/security", httpContent);
+            response.EnsureSuccessStatusCode();
+            Assert.True(JsonConvert.DeserializeObject<Dictionary<string, string>>(await response.Content.ReadAsStringAsync())["token"].Length > 10);
+            Factory.DestroyDatabase();
         }
     }
 }

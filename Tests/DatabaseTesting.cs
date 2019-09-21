@@ -1,4 +1,4 @@
-﻿using InclusCommunication.Cli.Helpers;
+﻿
 using InclusCommunication.Entities;
 using InclusCommunication.Services.Interfaces;
 using System;
@@ -6,10 +6,14 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Collections.Generic;
 using System.Text;
 using InclusCommunication.Services.Implementations;
+using Xunit;
+using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.AspNetCore.Hosting;
+using Tests.Helpers;
 
 namespace Tests
 {
-    public abstract class DatabaseTesting
+    public abstract class DatabaseTesting : IClassFixture<FakeWebFactory<InclusCommunication.Startup>>
     {
         protected const string TEST_EMAIL = "test@mail.ru";
 
@@ -17,34 +21,15 @@ namespace Tests
 
         protected const string TEST_PASSWORD = "123456";
 
-        protected readonly IRepository<User> Users;
 
-        protected readonly IRepository<Credentials> Credentials;
+        protected readonly FakeWebFactory<InclusCommunication.Startup> Factory;
 
-        public DatabaseTesting()
+        public DatabaseTesting(FakeWebFactory<InclusCommunication.Startup> factory)
         {
-
-            IServiceProvider services = ServiceBuilder.BuildServiceProvider();
-            Users = services.GetRequiredService<IRepository<User>>();
-            Credentials = services.GetRequiredService<IRepository<Credentials>>();
+            Factory = factory;
         }
 
-        protected void RemoveTestCredentials()
-        {
-            Credentials[] credentialsEntities = Credentials.Find(x => x.Login == TEST_LOGIN);
-            if (credentialsEntities.Length > 0)
-            {
-                Credentials.RemoveRange(credentialsEntities);
-            }
-        }
 
-        protected void RemoveTestUsers()
-        {
-            User[] existingUsers = Users.Find(x => x.Email == TEST_EMAIL);
-            if (existingUsers.Length > 0)
-            {
-                Users.RemoveRange(existingUsers);
-            }
-        }
+
     }
 }

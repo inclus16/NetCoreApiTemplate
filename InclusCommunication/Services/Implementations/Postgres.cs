@@ -10,11 +10,9 @@ namespace InclusCommunication.Services.Implementations
 {
     public class Postgres : DbContext
     {
-        private string ConnectionString;
-        public Postgres(IConfiguration configuration)
-        {
-            ConnectionString = configuration.GetConnectionString("Postgres");
-        }
+        public Postgres(DbContextOptions<Postgres> options)
+        : base(options)
+        { }
 
         public DbSet<Credentials> Credentials { get; set; }
 
@@ -24,9 +22,5 @@ namespace InclusCommunication.Services.Implementations
 
         public DbSet<UserRole> UserRoles { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseNpgsql(ConnectionString);
-        }
     }
 }

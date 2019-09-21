@@ -22,9 +22,14 @@ namespace InclusCommunication.Controllers
         }
 
         [HttpPost]
-        public AbstractResponse Post(LoginRequest request)
+        public IActionResult Post(LoginRequest request)
         {
-            return Security.GetResponse(request);
+            string jwt = Security.GetToken(request);
+            if (jwt == null)
+            {
+                return Forbid();
+            }
+            return Ok(new { token=jwt});
         }
 
         [HttpGet]

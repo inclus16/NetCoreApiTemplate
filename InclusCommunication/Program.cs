@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using CommandDotNet;
 using CommandDotNet.IoC.MicrosoftDependencyInjection;
 using InclusCommunication.Cli;
-using InclusCommunication.Cli.Helpers;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -30,8 +29,10 @@ namespace InclusCommunication
 
         public static void HandleCli(string [] args)
         {
+            
             AppRunner<CliInterface> appRunner = new AppRunner<CliInterface>()
-                .UseMicrosoftDependencyInjection(ServiceBuilder.BuildServiceProvider());
+                .UseMicrosoftDependencyInjection(WebHost.CreateDefaultBuilder(args)
+                .UseStartup<Startup>().Build().Services);
            appRunner.Run(args);
         }
 
